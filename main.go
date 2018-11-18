@@ -13,8 +13,8 @@ import (
 
 //Tokenは環境変数
 var (
-	Token             = os.Getenv("TOKEN")
-	BotName           = os.Getenv("CLIENT_ID")
+	Token             = "TOKEN"
+	BotName           = "CLIENT_ID"
 	stopBot           = make(chan bool)
 	vcsession         *discordgo.VoiceConnection
 	HelloGo           = "!hellogo"
@@ -57,10 +57,10 @@ func onMessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	fmt.Printf("%20s %20s %20s > %s\n", m.ChannelID, time.Now().Format(time.Stamp), m.Author.Username, m.Content)
 
 	switch {
-	case strings.HasPrefix(m.Content, fmt.Sprintf("%s %s", BotName, HelloGo)):
+	case strings.HasPrefix(m.Content, "!hellogo"):
 		sendMessage(s, c, "Hello Go!")
 
-	case strings.HasPrefix(m.Content, fmt.Sprintf("%s %s", BotName, ChannelVoiceJoin)):
+	case strings.HasPrefix(m.Content, "!vcjoin"):
 		guildChannels, _ := s.GuildChannels(c.GuildID)
 		var sendText string
 		for _, a := range guildChannels {
@@ -70,7 +70,7 @@ func onMessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		vcsession, _ = s.ChannelVoiceJoin(c.GuildID, voiceChannelID, false, false)
 		vcsession.AddHandler(onVoiceReceived)
-	case strings.HasPrefix(m.Content, fmt.Sprintf("%s %s", BotName, ChannelVoiceLeave)):
+	case strings.HasPrefix(m.Content, "!vcleave"):
 		vcsession.Disconnect()
 	}
 }
